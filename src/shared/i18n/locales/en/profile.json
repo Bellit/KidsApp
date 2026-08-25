@@ -1,0 +1,20 @@
+{
+  "title": "My profile",
+  "subtitle": "Your space journey",
+  "stats_stars": "Total stars",
+  "stats_exercises": "Exercises",
+  "stats_levels": "Levels",
+  "stats_medals": "Medals",
+  "section_achievements": "My medals",
+  "section_records": "Level records",
+  "level_unlocked": "Unlocked",
+  "level_locked": "Locked",
+  "medal_earned": "Medal earned",
+  "medal_locked_hint": "Keep playing to unlock this medal",
+  "reset": "Reset progress",
+  "reset_confirm": "Are you sure you want to reset all your progress?",
+  "reset_done": "Progress reset!",
+  "no_medals": "You don't have medals yet. Play to earn your first one!",
+  "records_best_score": "Best score",
+  "records_exercises": "Exercises"
+}

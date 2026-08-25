@@ -1,0 +1,12 @@
+{
+  "title": "Settings",
+  "language": "Language",
+  "language_hint": "Choose the language of your mission",
+  "spanish": "Español",
+  "english": "English",
+  "sound": "Sound",
+  "sound_hint": "Enable or mute sound effects",
+  "sound_on": "On",
+  "sound_off": "Muted",
+  "saved": "Preferences saved"
+}

@@ -1,0 +1,50 @@
+{
+  "first_step": {
+    "name": "¡Primer paso!",
+    "desc": "Completaste tu primera sesión de práctica"
+  },
+  "perfect_session": {
+    "name": "Sesión perfecta",
+    "desc": "Consigue 3 estrellas en una sesión"
+  },
+  "no_hints_pro": {
+    "name": "Sin pistas, campeón",
+    "desc": "Completa una sesión sin usar pistas"
+  },
+  "level_1_master": {
+    "name": "Maestro de Mercurio",
+    "desc": "Consigue 3 estrellas en el nivel 1"
+  },
+  "level_2_master": {
+    "name": "Maestro de Venus",
+    "desc": "Consigue 3 estrellas en el nivel 2"
+  },
+  "level_3_master": {
+    "name": "Maestro de la Tierra",
+    "desc": "Consigue 3 estrellas en el nivel 3"
+  },
+  "division_guru": {
+    "name": "Gurú de la división",
+    "desc": "Consigue 3 estrellas en los 5 niveles"
+  },
+  "streak_10": {
+    "name": "Racha de 10",
+    "desc": "Completa 10 ejercicios en una sola sesión"
+  },
+  "sharp_mind": {
+    "name": "Mente veloz",
+    "desc": "Termina una sesión en menos de 60 segundos"
+  },
+  "resilient": {
+    "name": "Sin rendirse",
+    "desc": "Termina una sesión con errores y aun así consigue 2 estrellas o más"
+  },
+  "early_bird": {
+    "name": "Madrugador",
+    "desc": "Completa el reto diario"
+  },
+  "marathon": {
+    "name": "Maratón",
+    "desc": "Completa 100 ejercicios en total"
+  }
+}

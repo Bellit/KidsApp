@@ -1,0 +1,88 @@
+{
+  "app": {
+    "title": "KidsApp – Division Mission",
+    "tagline": "Learn to divide while exploring space",
+    "greeting": "Hello, explorer!"
+  },
+  "nav": {
+    "home": "Home",
+    "lessons": "Lessons",
+    "practice": "Practice",
+    "games": "Challenges",
+    "profile": "Progress",
+    "settings": "Settings"
+  },
+  "page": {
+    "under_construction": "Under construction",
+    "loading": "Loading...",
+    "not_found": "You got lost in space!",
+    "not_found_hint": "This area is not on the star map yet.",
+    "back_home": "Back to home"
+  },
+  "ui": {
+    "button_label": "Press here",
+    "modal_title": "Dialog title",
+    "modal_body": "Dialog content",
+    "close": "Close",
+    "locked": "Locked",
+    "completed": "Completed",
+    "loading": "Loading...",
+    "stars_rating": "{{count}} of 3 stars"
+  },
+  "design": {
+    "title": "Design System",
+    "subtitle": "Space components",
+    "buttons": "Buttons",
+    "cards": "Planet cards",
+    "orbs": "Planet orbs",
+    "mascot": "Mascot",
+    "mission_progress": "Mission progress",
+    "ranks": "Rank badges",
+    "stars": "Stars",
+    "medals": "Medals",
+    "modal": "Dialog",
+    "progress": "Progress",
+    "toast": "Toasts",
+    "celebration": "Celebration",
+    "sound": "Sound",
+    "open_modal": "Open dialog",
+    "launch": "Launch the celebration!",
+    "show_success": "Show success toast",
+    "show_error": "Show error toast",
+    "show_info": "Show info toast",
+    "play_click": "Play click",
+    "play_correct": "Play correct",
+    "play_incorrect": "Play error",
+    "play_celebrate": "Play celebration"
+  },
+  "home": {
+    "subtitle": "What do you want to explore today?",
+    "lessons_desc": "Learn long division step by step",
+    "practice_desc": "Train and earn stars",
+    "games_desc": "Race against the clock!",
+    "profile_desc": "See your medals and records",
+    "settings_desc": "Sound and language for your mission"
+  },
+  "install": {
+    "title": "Install the app!",
+    "description": "Add Mission Division to your home screen to play offline",
+    "ios_hint": "In Safari, tap the Share button and choose Add to Home Screen to install Mission Division",
+    "action": "Install",
+    "later": "Not now"
+  },
+  "sound": {
+    "on": "Sound on",
+    "off": "Sound muted"
+  },
+  "a11y": {
+    "main_nav": "Main navigation",
+    "header_actions": "Header actions",
+    "grid": {
+      "dividend": "Dividend",
+      "divisor": "Divisor",
+      "quotient": "Quotient",
+      "remainder": "Remainder",
+      "division_sign": "Division sign"
+    }
+  }
+}

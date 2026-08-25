@@ -1,0 +1,88 @@
+{
+  "app": {
+    "title": "KidsApp – Misión División",
+    "tagline": "Aprende a dividir mientras exploras el espacio",
+    "greeting": "¡Hola, explorador!"
+  },
+  "nav": {
+    "home": "Inicio",
+    "lessons": "Lecciones",
+    "practice": "Práctica",
+    "games": "Retos",
+    "profile": "Progreso",
+    "settings": "Ajustes"
+  },
+  "page": {
+    "under_construction": "En construcción",
+    "loading": "Cargando...",
+    "not_found": "¡Te perdiste en el espacio!",
+    "not_found_hint": "Esta zona todavía no está en el mapa estelar.",
+    "back_home": "Volver al inicio"
+  },
+  "ui": {
+    "button_label": "Pulsa aquí",
+    "modal_title": "Título del diálogo",
+    "modal_body": "Contenido del diálogo",
+    "close": "Cerrar",
+    "locked": "Bloqueado",
+    "completed": "Completado",
+    "loading": "Cargando...",
+    "stars_rating": "{{count}} de 3 estrellas"
+  },
+  "design": {
+    "title": "Design System",
+    "subtitle": "Componentes espaciales",
+    "buttons": "Botones",
+    "cards": "Tarjetas planeta",
+    "orbs": "Esferas planeta",
+    "mascot": "Mascota",
+    "mission_progress": "Progreso de misión",
+    "ranks": "Medallas de puesto",
+    "stars": "Estrellas",
+    "medals": "Medallas",
+    "modal": "Diálogo",
+    "progress": "Progreso",
+    "toast": "Avisos",
+    "celebration": "Celebración",
+    "sound": "Sonido",
+    "open_modal": "Abrir diálogo",
+    "launch": "¡Lanza la celebración!",
+    "show_success": "Mostrar aviso de éxito",
+    "show_error": "Mostrar aviso de error",
+    "show_info": "Mostrar aviso de información",
+    "play_click": "Reproducir clic",
+    "play_correct": "Reproducir acierto",
+    "play_incorrect": "Reproducir error",
+    "play_celebrate": "Reproducir celebración"
+  },
+  "home": {
+    "subtitle": "¿Qué quieres explorar hoy?",
+    "lessons_desc": "Aprende la división larga paso a paso",
+    "practice_desc": "Entrena y consigue estrellas",
+    "games_desc": "¡Ponte a prueba contra el reloj!",
+    "profile_desc": "Mira tus medallas y récords",
+    "settings_desc": "Sonido e idioma de tu misión"
+  },
+  "install": {
+    "title": "¡Instala la app!",
+    "description": "Añade Misión División a tu pantalla de inicio para jugar sin internet",
+    "ios_hint": "En Safari toca el botón Compartir y elige «Añadir a pantalla de inicio» para instalar Misión División",
+    "action": "Instalar",
+    "later": "Ahora no"
+  },
+  "sound": {
+    "on": "Sonido activado",
+    "off": "Sonido silenciado"
+  },
+  "a11y": {
+    "main_nav": "Navegación principal",
+    "header_actions": "Acciones de cabecera",
+    "grid": {
+      "dividend": "Dividendo",
+      "divisor": "Divisor",
+      "quotient": "Cociente",
+      "remainder": "Resto",
+      "division_sign": "Signo de división"
+    }
+  }
+}

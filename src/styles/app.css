@@ -1,0 +1,98 @@
+/* La fuente DEBE ir antes que @import "tailwindcss" (gotcha de Tailwind v4) */
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap');
+@import 'tailwindcss';
+
+/* Design tokens: paleta espacial pastel (Tailwind v4 CSS-first) */
+@theme {
+  --color-space-bg: #1b2a4a;
+  --color-space-bg-soft: #24365c;
+  --color-space-surface: #eaf3ff;
+
+  --color-planet-mercury: #f6d6a8;
+  --color-planet-venus: #ffd9e8;
+  --color-planet-earth: #bfe3ff;
+  --color-planet-mars: #ffcfc4;
+  --color-asteroid: #e6d8ff;
+
+  --color-astral-sky: #a8c8f0;
+  --color-astral-lilac: #d5c3ff;
+  --color-astral-rose: #ffc4de;
+  --color-astral-sun: #ffe4a8;
+
+  --color-success: #276749;
+  --color-success-soft: #d3f5e3;
+  --color-danger: #b03a48;
+  --color-danger-soft: #ffd9dd;
+
+  --color-text-ink: #1f2b3d;
+  --color-text-space: #f2f7ff;
+
+  --font-sans: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Baloo 2', 'Nunito', 'Segoe UI', system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    margin: 0;
+    background-color: var(--color-space-bg);
+    background-image:
+      radial-gradient(ellipse 65% 40% at 15% 0%, rgba(165, 195, 255, 0.22), transparent 60%),
+      radial-gradient(ellipse 58% 45% at 100% 18%, rgba(213, 195, 255, 0.18), transparent 60%),
+      radial-gradient(ellipse 55% 38% at 50% 100%, rgba(255, 196, 222, 0.14), transparent 62%);
+    background-attachment: fixed;
+    color: var(--color-text-space);
+    font-family: var(--font-sans);
+  }
+}
+
+@keyframes float-planet {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes press-bounce {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.92);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-float {
+  animation: float-planet 3.4s ease-in-out infinite;
+}
+
+@keyframes ring-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.06);
+  }
+}
+
+.animate-ring-pulse {
+  animation: ring-pulse 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-ring-pulse {
+    animation: none;
+  }
+}

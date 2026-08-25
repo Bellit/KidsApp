@@ -1,0 +1,36 @@
+.ldg-grid {
+  display: grid;
+  grid-template-columns: minmax(1.5rem, auto) 1.25rem repeat(var(--ldg-n, 1), minmax(1.5rem, 1fr));
+  gap: 0.125rem;
+}
+
+@media (min-width: 640px) {
+  .ldg-grid {
+    grid-template-columns: minmax(2.5rem, auto) 1.75rem repeat(var(--ldg-n, 1), minmax(2rem, 1fr));
+  }
+}
+
+.ldg-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.ldg-digit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 2.25rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+@media (min-width: 640px) {
+  .ldg-digit {
+    min-height: 2.75rem;
+    font-size: 1.25rem;
+  }
+}

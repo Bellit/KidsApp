@@ -1,0 +1,50 @@
+{
+  "first_step": {
+    "name": "First steps!",
+    "desc": "You completed your first practice session"
+  },
+  "perfect_session": {
+    "name": "Perfect session",
+    "desc": "Get 3 stars in one session"
+  },
+  "no_hints_pro": {
+    "name": "No hints, champ",
+    "desc": "Finish a session without using hints"
+  },
+  "level_1_master": {
+    "name": "Mercury Master",
+    "desc": "Get 3 stars on level 1"
+  },
+  "level_2_master": {
+    "name": "Venus Master",
+    "desc": "Get 3 stars on level 2"
+  },
+  "level_3_master": {
+    "name": "Earth Master",
+    "desc": "Get 3 stars on level 3"
+  },
+  "division_guru": {
+    "name": "Division Guru",
+    "desc": "Get 3 stars on all 5 levels"
+  },
+  "streak_10": {
+    "name": "Streak of 10",
+    "desc": "Complete 10 exercises in one session"
+  },
+  "sharp_mind": {
+    "name": "Quick mind",
+    "desc": "Finish a session in less than 60 seconds"
+  },
+  "resilient": {
+    "name": "Never give up",
+    "desc": "Finish a session with errors and still earn 2 stars or more"
+  },
+  "early_bird": {
+    "name": "Early bird",
+    "desc": "Complete the daily challenge"
+  },
+  "marathon": {
+    "name": "Marathon",
+    "desc": "Complete 100 exercises in total"
+  }
+}

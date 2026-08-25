@@ -1,0 +1,20 @@
+{
+  "title": "Mi perfil",
+  "subtitle": "Tu viaje por el espacio",
+  "stats_stars": "Estrellas totales",
+  "stats_exercises": "Ejercicios",
+  "stats_levels": "Niveles",
+  "stats_medals": "Medallas",
+  "section_achievements": "Mis medallas",
+  "section_records": "Récords por nivel",
+  "level_unlocked": "Desbloqueado",
+  "level_locked": "Bloqueado",
+  "medal_earned": "Medalla ganada",
+  "medal_locked_hint": "Sigue jugando para desbloquear esta medalla",
+  "reset": "Reiniciar progreso",
+  "reset_confirm": "¿Seguro que quieres reiniciar todo tu progreso?",
+  "reset_done": "¡Progreso reiniciado!",
+  "no_medals": "Aún no tienes medallas. ¡Juega para ganar la primera!",
+  "records_best_score": "Mejor puntuación",
+  "records_exercises": "Ejercicios"
+}

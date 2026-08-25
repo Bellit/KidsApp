@@ -1,0 +1,12 @@
+{
+  "title": "Ajustes",
+  "language": "Idioma",
+  "language_hint": "Elige el idioma de tu misión",
+  "spanish": "Español",
+  "english": "English",
+  "sound": "Sonido",
+  "sound_hint": "Activa o silencia los efectos de sonido",
+  "sound_on": "Activado",
+  "sound_off": "Silenciado",
+  "saved": "Preferencias guardadas"
+}
