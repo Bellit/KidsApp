@@ -3,7 +3,6 @@ import {
   useId,
   useMemo,
   useState,
-  type ChangeEvent,
   type FormEvent,
 } from 'react'
 import { Link } from 'react-router'
@@ -20,6 +19,7 @@ import { useGameStore, DAILY_REWARD_STARS } from '../shared/store/gameStore'
 import {
   Celebration,
   DigitInput,
+  ExitSessionButton,
   LongDivisionGrid,
   Mascot,
   OperationCard,
@@ -34,11 +34,6 @@ import { useSound } from '../shared/hooks/useSound'
 type Phase = 'running' | 'complete'
 
 type ExercisePhase = 'running' | 'solved'
-
-interface FeedbackState {
-  correct: boolean
-  messageKey: string
-}
 
 interface FinalStats {
   stars: number
@@ -98,7 +93,7 @@ export default function DailyChallengePage() {
   const [errorCount, setErrorCount] = useState(0)
   const [inputValue, setInputValue] = useState('')
   const [filledQuotient, setFilledQuotient] = useState<number[]>([])
-  const [lastFeedback, setLastFeedback] = useState<FeedbackState | null>(null)
+  const [inputError, setInputError] = useState<string | null>(null)
   const [toast, setToast] = useState<{ message: string; variant: ToastVariant } | null>(null)
   const [celebrating, setCelebrating] = useState(false)
   const [rewardClaimed, setRewardClaimed] = useState(false)
@@ -133,7 +128,7 @@ export default function DailyChallengePage() {
 
   const resetInputState = useCallback(() => {
     setInputValue('')
-    setLastFeedback(null)
+    setInputError(null)
   }, [])
 
   // F4.4: al completar el reto se reclama el premio (+5 estrellas) y se registra
@@ -209,7 +204,6 @@ export default function DailyChallengePage() {
     if (!result || !currentStep || currentKind === undefined) return
     const answer = inputValue === '' ? null : Number(inputValue)
     const feedback = validateStep(result, stepIndex, currentKind, answer)
-    setLastFeedback(feedback)
     if (feedback.correct) {
       play('correct')
       if (currentKind === 'quotient') {
@@ -225,7 +219,7 @@ export default function DailyChallengePage() {
     } else {
       play('incorrect')
       setErrorCount((e) => e + 1)
-      showToast('error', t(feedback.messageKey, { ns: 'practice' }))
+      setInputError(t(feedback.messageKey, { ns: 'practice' }))
     }
   }
 
@@ -234,7 +228,6 @@ export default function DailyChallengePage() {
     if (!result || !currentStep || currentKind !== 'broughtDown') return
     const isCorrectIndex = index === currentStep.nextDigitIndex
     const feedback = validateStep(result, stepIndex, 'broughtDown', Number(dividendDigits[index] ?? 0))
-    setLastFeedback(feedback)
     if (isCorrectIndex) {
       play('correct')
       setCelebrating(true)
@@ -243,12 +236,13 @@ export default function DailyChallengePage() {
     } else {
       play('incorrect')
       setErrorCount((e) => e + 1)
-      showToast('error', t(feedback.messageKey, { ns: 'practice' }))
+      setInputError(t(feedback.messageKey, { ns: 'practice' }))
     }
   }
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value.replace(/[^0-9]/g, '').slice(0, MAX_INPUT_LENGTH))
+  const handleInputChange = (value: string) => {
+    setInputValue(value)
+    setInputError(null)
   }
 
   const formatTime = (seconds: number): string => {
@@ -368,14 +362,14 @@ export default function DailyChallengePage() {
           : ''
     const slotClass =
       filled !== undefined
-        ? 'border-success/70 text-success'
+        ? 'border-solid border-success-soft/70 bg-success/25 text-success-soft'
         : isCurrent
-          ? 'border-astral-sun text-astral-sun'
-          : 'border-astral-sky/40 text-text-space/40'
+          ? 'border-dashed border-astral-sun bg-astral-sun/10 text-astral-sun'
+          : 'border-dashed border-astral-sky/40 text-text-space/40'
     return (
       <div
         key={i}
-        className={`mx-0.5 flex h-9 min-w-0 items-center justify-center rounded-b-lg border-b-4 border-solid text-lg font-extrabold sm:h-11 sm:text-xl ${slotClass}`}
+        className={`flex h-11 min-w-0 items-center justify-center rounded-xl border-2 font-display text-2xl font-extrabold sm:h-12 sm:text-3xl ${slotClass}`}
       >
         {value}
       </div>
@@ -420,12 +414,13 @@ export default function DailyChallengePage() {
     <div className="flex flex-col gap-6">
       <header className="flex items-center gap-3">
         <Mascot pose="idle" size={44} />
-        <div>
+        <div className="min-w-0 flex-1">
           <h1 className="font-display text-2xl font-extrabold text-text-space sm:text-3xl">
             {t('daily_title')}
           </h1>
           <p className="text-lg font-semibold text-text-space/80">{t('daily_mixed_level')}</p>
         </div>
+        <ExitSessionButton to="/games" />
       </header>
 
       <MissionProgressBar
@@ -451,6 +446,7 @@ export default function DailyChallengePage() {
             exercise={exercise}
             currentStepIndex={currentStep.digitIndex}
             variant="practice"
+            previousSteps={steps.slice(0, stepIndex)}
             currentProduct={subStepIndex >= 2 ? currentStep.product : undefined}
             currentRemainder={subStepIndex >= 3 ? currentStep.partialRemainder : undefined}
             bringDownIndex={isBringDown ? (currentStep.nextDigitIndex ?? undefined) : undefined}
@@ -466,7 +462,15 @@ export default function DailyChallengePage() {
           </p>
         ) : (
           <form onSubmit={handleCheck} className="flex flex-col items-center gap-3">
-            <DigitInput id={inputId} label={inputLabel} value={inputValue} onChange={handleInputChange} />
+            <DigitInput
+              id={inputId}
+              label={inputLabel}
+              value={inputValue}
+              onValueChange={handleInputChange}
+              error={inputError}
+              errorKey={errorCount}
+              maxLength={MAX_INPUT_LENGTH}
+            />
             <SpaceButton type="submit" variant="primary">
               {t('check', { ns: 'practice' })}
             </SpaceButton>
@@ -474,9 +478,9 @@ export default function DailyChallengePage() {
         )}
 
         <div aria-live="polite" className="min-h-[3rem]">
-          {lastFeedback && !lastFeedback.correct ? (
-            <p className="rounded-2xl bg-danger/10 p-3 text-base font-bold leading-relaxed text-danger-soft">
-              {t(lastFeedback.messageKey, { ns: 'practice' })}
+          {isBringDown && inputError ? (
+            <p className="rounded-2xl bg-danger/15 p-3 text-center text-base font-extrabold text-danger-soft">
+              {inputError}
             </p>
           ) : null}
         </div>

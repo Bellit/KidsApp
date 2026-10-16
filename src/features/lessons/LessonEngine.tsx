@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useId, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { validateStep, type StepInputKind } from '../../core/division/validator'
@@ -6,6 +6,7 @@ import type { DivisionStep } from '../../core/division/solver'
 import {
   Celebration,
   DigitInput,
+  ExitSessionButton,
   LongDivisionGrid,
   Mascot,
   OperationCard,
@@ -108,6 +109,7 @@ export function LessonEngine({ lesson, onComplete }: LessonEngineProps) {
   const [inputValue, setInputValue] = useState('')
   const [filledQuotient, setFilledQuotient] = useState<number[]>([])
   const [lastFeedback, setLastFeedback] = useState<FeedbackState | null>(null)
+  const [inputError, setInputError] = useState<string | null>(null)
   const [hintMessage, setHintMessage] = useState<string | null>(null)
   const [highlightActive, setHighlightActive] = useState(false)
   const [toast, setToast] = useState<{ message: string; variant: ToastVariant } | null>(null)
@@ -163,6 +165,7 @@ export function LessonEngine({ lesson, onComplete }: LessonEngineProps) {
     setHintMessage(null)
     setHighlightActive(false)
     setLastFeedback(null)
+    setInputError(null)
   }, [])
 
   const goToNextContentStep = useCallback(() => {
@@ -196,8 +199,9 @@ export function LessonEngine({ lesson, onComplete }: LessonEngineProps) {
     setShowSolved(true)
   }, [result, currentStep, subStepIndex, solverStepIndex, resetSubStepInput])
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value.replace(/[^0-9]/g, '').slice(0, 3))
+  const handleInputChange = (value: string) => {
+    setInputValue(value)
+    setInputError(null)
   }
 
   const handleCheck = (event: FormEvent) => {
@@ -221,7 +225,7 @@ export function LessonEngine({ lesson, onComplete }: LessonEngineProps) {
     } else {
       play('incorrect')
       setErrors((e) => e + 1)
-      showToast('error', t(feedback.messageKey))
+      setInputError(t(feedback.messageKey))
     }
   }
 
@@ -239,7 +243,7 @@ export function LessonEngine({ lesson, onComplete }: LessonEngineProps) {
     } else {
       play('incorrect')
       setErrors((e) => e + 1)
-      showToast('error', t(feedback.messageKey))
+      setInputError(t(feedback.messageKey))
     }
   }
 
@@ -334,14 +338,14 @@ export function LessonEngine({ lesson, onComplete }: LessonEngineProps) {
                 : ''
           const slotClass =
             filled !== undefined
-              ? 'border-success/70 text-success'
+              ? 'border-solid border-success-soft/70 bg-success/25 text-success-soft'
               : isCurrent
-                ? 'border-astral-sun text-astral-sun'
-                : 'border-astral-sky/40 text-text-space/40'
+                ? 'border-dashed border-astral-sun bg-astral-sun/10 text-astral-sun'
+                : 'border-dashed border-astral-sky/40 text-text-space/40'
           return (
             <div
               key={i}
-              className={`mx-0.5 flex h-9 min-w-0 items-center justify-center rounded-b-lg border-b-4 border-solid text-lg font-extrabold sm:h-11 sm:text-xl ${slotClass}`}
+              className={`flex h-11 min-w-0 items-center justify-center rounded-xl border-2 font-display text-2xl font-extrabold sm:h-12 sm:text-3xl ${slotClass}`}
             >
               {value}
             </div>
@@ -357,7 +361,7 @@ export function LessonEngine({ lesson, onComplete }: LessonEngineProps) {
         className="h-14 w-14 shrink-0"
         iconClassName="h-6 w-6"
       />
-      <div>
+      <div className="min-w-0 flex-1">
         <h1 className="font-display text-2xl font-extrabold text-text-space sm:text-3xl">{t(lesson.titleKey)}</h1>
         <p className="text-sm font-bold text-text-space/70">
           {isExercise && result
@@ -365,6 +369,7 @@ export function LessonEngine({ lesson, onComplete }: LessonEngineProps) {
             : t('guided.progress', { current: stepIndex + 1, total: lesson.steps.length })}
         </p>
       </div>
+      {phase === 'complete' ? null : <ExitSessionButton to="/lessons" />}
     </header>
   )
 
@@ -461,6 +466,7 @@ export function LessonEngine({ lesson, onComplete }: LessonEngineProps) {
             <LongDivisionGrid
               exercise={exercise}
               currentStepIndex={currentStep.digitIndex}
+              previousSteps={result.steps.slice(0, solverStepIndex)}
               variant={isGuided || hintCount >= MAX_HINTS_PER_STEP ? 'lesson' : 'practice'}
               highlightActive={highlightActive || hintCount >= MAX_HINTS_PER_STEP}
               highlightIndex={isBringDown ? (currentStep.nextDigitIndex ?? currentStep.digitIndex) : undefined}
@@ -485,7 +491,14 @@ export function LessonEngine({ lesson, onComplete }: LessonEngineProps) {
             </div>
           ) : (
             <form onSubmit={handleCheck} className="flex flex-col items-center gap-3">
-              <DigitInput id={inputId} label={inputLabel} value={inputValue} onChange={handleInputChange} />
+              <DigitInput
+                id={inputId}
+                label={inputLabel}
+                value={inputValue}
+                onValueChange={handleInputChange}
+                error={inputError}
+                errorKey={errors}
+              />
               <div className="flex flex-wrap items-center justify-center gap-3">
                 <SpaceButton type="submit" variant="primary">
                   {t('common.check')}
@@ -501,7 +514,12 @@ export function LessonEngine({ lesson, onComplete }: LessonEngineProps) {
               </div>
             </form>
           )}
-          <div aria-live="polite" className="min-h-[3rem]">
+          <div aria-live="polite" className="flex min-h-[3rem] flex-col gap-2">
+            {isBringDown && inputError ? (
+              <p className="rounded-2xl bg-danger/15 p-3 text-center text-base font-extrabold text-danger-soft">
+                {inputError}
+              </p>
+            ) : null}
             {hintMessage ? (
               <p className="rounded-2xl bg-astral-sun/10 p-3 text-base font-bold leading-relaxed text-astral-sun">
                 {hintMessage}

@@ -169,7 +169,7 @@ describe('F7.2 — e2e del flujo crítico', () => {
 
     // --- Paso 2: seleccionar el nivel 1 y resolver la sesión ---
     fireEvent.click(screen.getByRole('button', { name: 'Mercurio' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Comenzar' }))
+    fireEvent.click(screen.getByRole('button', { name: '¡Despegar!' }))
 
     // La sesión se alimenta del ejercicio fijo del mock: 1234 ÷ 4.
     expect(screen.getByText('1234 ÷ 4')).toBeInTheDocument()
@@ -242,10 +242,10 @@ describe('F4.1 — bloqueo y desbloqueo de niveles', () => {
     expect(lockedVenus).toBeInTheDocument()
     expect(useGameStore.getState().isLevelUnlocked(2)).toBe(false)
 
-    // Intentar entrar en el bloqueado muestra el aviso y no selecciona nivel.
+    // Intentar entrar en el bloqueado muestra el aviso y no abre el panel de despegue.
     fireEvent.click(lockedVenus)
     expect(screen.getByText('Este nivel está bloqueado')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Comenzar' })).toBeDisabled()
+    expect(screen.queryByRole('button', { name: '¡Despegar!' })).not.toBeInTheDocument()
 
     // Ganar las estrellas necesarias (>= 2), igual que hace la UI al cerrar sesión.
     act(() => {

@@ -2,7 +2,8 @@
   "app": {
     "title": "KidsApp – Division Mission",
     "tagline": "Learn to divide while exploring space",
-    "greeting": "Hello, explorer!"
+    "greeting": "Hello, explorer!",
+    "short_title": "Division Mission"
   },
   "nav": {
     "home": "Home",
@@ -82,7 +83,15 @@
       "divisor": "Divisor",
       "quotient": "Quotient",
       "remainder": "Remainder",
-      "division_sign": "Division sign"
+      "division_sign": "Division sign",
+      "product": "Product"
     }
+  },
+  "session": {
+    "exit": "Exit",
+    "exit_title": "Leave the mission?",
+    "exit_body": "If you leave now you will lose your progress on this exercise.",
+    "exit_stay": "Keep playing",
+    "exit_confirm": "Yes, leave"
   }
 }

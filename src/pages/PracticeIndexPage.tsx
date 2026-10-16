@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import {
+  LevelLaunchModal,
   PlanetCard,
   PLANET_STAGE_ICONS,
-  SpaceButton,
   StarBadge,
   Toast,
   type PlanetCardState,
@@ -111,10 +111,18 @@ export default function PracticeIndexPage() {
         })}
       </div>
 
-      <section className="rounded-3xl border border-white/10 bg-space-bg-soft p-5 shadow-lg shadow-black/20">
-        <h2 className="mb-3 font-display text-lg font-extrabold text-astral-sky">{t('exercises_count')}</h2>
-        <div className="flex flex-wrap items-center gap-3">
-          <div role="group" aria-label={t('exercises_count')} className="flex gap-2">
+      {selectedLevel !== null ? (
+        <LevelLaunchModal
+          open
+          onClose={() => setSelectedLevel(null)}
+          color={LEVEL_COLORS[selectedLevel]}
+          name={t(`level_name_${selectedLevel}`)}
+          description={t(`level_desc_${selectedLevel}`)}
+          launchLabel={t('launch')}
+          onLaunch={startSession}
+        >
+          <h3 className="font-display text-lg font-extrabold">{t('exercises_count')}</h3>
+          <div role="group" aria-label={t('exercises_count')} className="flex gap-3">
             {EXERCISE_COUNTS.map((option) => (
               <button
                 key={option}
@@ -124,24 +132,18 @@ export default function PracticeIndexPage() {
                   setCount(option)
                 }}
                 aria-pressed={count === option}
-                className={`h-12 w-14 rounded-2xl font-display text-lg font-extrabold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-astral-sun ${
+                className={`h-14 w-16 rounded-2xl font-display text-xl font-extrabold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-text-ink ${
                   count === option
-                    ? 'bg-planet-venus text-text-ink'
-                    : 'border-2 border-astral-sky/50 bg-transparent text-text-space hover:bg-white/10'
+                    ? 'bg-text-ink text-space-surface shadow-md'
+                    : 'border-2 border-text-ink/30 bg-transparent text-text-ink hover:bg-text-ink/10'
                 }`}
               >
                 {option}
               </button>
             ))}
           </div>
-          <SpaceButton onClick={startSession} disabled={selectedLevel === null}>
-            {t('start')}
-          </SpaceButton>
-        </div>
-        {selectedLevel === null ? (
-          <p className="mt-3 text-sm font-bold text-text-space/60">{t('select_level_hint')}</p>
-        ) : null}
-      </section>
+        </LevelLaunchModal>
+      ) : null}
 
       <Toast message={toast.message} variant="info" visible={toast.visible} />
     </div>

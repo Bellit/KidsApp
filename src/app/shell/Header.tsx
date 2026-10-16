@@ -11,26 +11,49 @@ function GearIcon() {
   )
 }
 
-export function Header() {
+const TITLE_CLASS = 'flex items-center gap-2 font-display text-lg font-extrabold text-astral-sky md:text-xl'
+
+function HeaderTitle() {
+  const { t } = useTranslation()
+  return (
+    <>
+      <span aria-hidden="true" className="h-3 w-3 rounded-full bg-astral-sun shadow-[0_0_10px_2px_rgba(255,228,168,0.7)]" />
+      <span className="sm:hidden">{t('app.short_title')}</span>
+      <span className="hidden sm:inline">{t('app.title')}</span>
+    </>
+  )
+}
+
+export function Header({ showNav = true }: { showNav?: boolean }) {
   const { t } = useTranslation()
   return (
     <header className="sticky top-0 z-10 bg-space-bg/90 backdrop-blur">
       <div className="mx-auto flex w-full max-w-3xl items-center justify-between px-4 py-3">
-        <NavLink to="/" end className="flex items-center gap-2 font-display text-lg font-extrabold text-astral-sky md:text-xl">
-          <span aria-hidden="true" className="h-3 w-3 rounded-full bg-astral-sun shadow-[0_0_10px_2px_rgba(255,228,168,0.7)]" />
-          {t('app.title')}
-        </NavLink>
-        <nav aria-label={t('a11y.header_actions')} className="flex items-center gap-2">
-          <NavLink
-            to="/settings"
-            aria-label={t('nav.settings')}
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-planet-mercury text-text-ink shadow-md shadow-black/20 transition-transform hover:scale-105 hover:rotate-12"
-          >
-            <GearIcon />
+        {showNav ? (
+          <NavLink to="/" end className={TITLE_CLASS}>
+            <HeaderTitle />
           </NavLink>
-        </nav>
+        ) : (
+          <span className={TITLE_CLASS}>
+            <HeaderTitle />
+          </span>
+        )}
+        {showNav ? (
+          <nav aria-label={t('a11y.header_actions')} className="flex items-center gap-2">
+            <NavLink
+              to="/settings"
+              aria-label={t('nav.settings')}
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-planet-mercury text-text-ink shadow-md shadow-black/20 transition-transform hover:scale-105 hover:rotate-12"
+            >
+              <GearIcon />
+            </NavLink>
+          </nav>
+        ) : (
+          // Misma altura que el engranaje para que la cabecera no salte.
+          <span aria-hidden="true" className="h-11" />
+        )}
       </div>
-      <TopNav />
+      {showNav ? <TopNav /> : null}
     </header>
   )
 }

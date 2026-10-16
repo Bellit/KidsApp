@@ -55,5 +55,7 @@
   "exercise_solved": "Division complete!",
   "result_equation": "{{dividend}} ÷ {{divisor}} = {{quotient}}",
   "result_remainder": "remainder {{remainder}}",
-  "next_exercise": "Next"
+  "next_exercise": "Next",
+  "number_pad": "Number pad",
+  "launch": "Blast off!"
 }

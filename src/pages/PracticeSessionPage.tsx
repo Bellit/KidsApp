@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useId,
-  useMemo,
-  useState,
-  type ChangeEvent,
-  type FormEvent,
-} from 'react'
+import { useCallback, useId, useMemo, useState, type FormEvent } from 'react'
 import { Link, Navigate, useParams, useSearchParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { generateSession, type DivisionLevel, type GeneratedExercise } from '../core/division/generator'
@@ -16,13 +9,17 @@ import { useGameStore } from '../shared/store/gameStore'
 import {
   Celebration,
   DigitInput,
+  ExitSessionButton,
   LongDivisionGrid,
   Mascot,
   MissionProgressBar,
   OperationCard,
+  PLANET_STAGE_ICONS,
+  PlanetOrb,
   SpaceButton,
   StarBadge,
   Toast,
+  type PlanetColor,
   type ToastVariant,
 } from '../shared/components'
 import { useSound } from '../shared/hooks/useSound'
@@ -55,6 +52,14 @@ const MAX_INPUT_LENGTH = 3
 
 const LEVEL_MIN = 1
 const LEVEL_MAX = 5
+
+const LEVEL_COLORS: Record<number, PlanetColor> = {
+  1: 'mercury',
+  2: 'venus',
+  3: 'earth',
+  4: 'mars',
+  5: 'asteroid',
+}
 
 function parseCount(raw: string | null): number {
   const parsed = Number(raw)
@@ -127,6 +132,7 @@ export default function PracticeSessionPage() {
   const [inputValue, setInputValue] = useState('')
   const [filledQuotient, setFilledQuotient] = useState<number[]>([])
   const [lastFeedback, setLastFeedback] = useState<FeedbackState | null>(null)
+  const [inputError, setInputError] = useState<string | null>(null)
   const [hintCount, setHintCount] = useState(0)
   const [hintMessage, setHintMessage] = useState<string | null>(null)
   const [highlightActive, setHighlightActive] = useState(false)
@@ -166,6 +172,7 @@ export default function PracticeSessionPage() {
     setHintMessage(null)
     setHighlightActive(false)
     setLastFeedback(null)
+    setInputError(null)
   }, [])
 
   const finishSession = (correct: number) => {
@@ -253,7 +260,7 @@ export default function PracticeSessionPage() {
     } else {
       play('incorrect')
       setErrorCount((e) => e + 1)
-      showToast('error', t(feedback.messageKey))
+      setInputError(t(feedback.messageKey))
     }
   }
 
@@ -271,7 +278,7 @@ export default function PracticeSessionPage() {
     } else {
       play('incorrect')
       setErrorCount((e) => e + 1)
-      showToast('error', t(feedback.messageKey))
+      setInputError(t(feedback.messageKey))
     }
   }
 
@@ -294,8 +301,9 @@ export default function PracticeSessionPage() {
     setHintMessage(t(hintKey))
   }
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value.replace(/[^0-9]/g, '').slice(0, MAX_INPUT_LENGTH))
+  const handleInputChange = (value: string) => {
+    setInputValue(value)
+    setInputError(null)
   }
 
   const handleRepeat = () => {
@@ -398,14 +406,14 @@ export default function PracticeSessionPage() {
           : ''
     const slotClass =
       filled !== undefined
-        ? 'border-success/70 text-success'
+        ? 'border-solid border-success-soft/70 bg-success/25 text-success-soft'
         : isCurrent
-          ? 'border-astral-sun text-astral-sun'
-          : 'border-astral-sky/40 text-text-space/40'
+          ? 'border-dashed border-astral-sun bg-astral-sun/10 text-astral-sun'
+          : 'border-dashed border-astral-sky/40 text-text-space/40'
     return (
       <div
         key={i}
-        className={`mx-0.5 flex h-9 min-w-0 items-center justify-center rounded-b-lg border-b-4 border-solid text-lg font-extrabold sm:h-11 sm:text-xl ${slotClass}`}
+        className={`flex h-11 min-w-0 items-center justify-center rounded-xl border-2 font-display text-2xl font-extrabold sm:h-12 sm:text-3xl ${slotClass}`}
       >
         {value}
       </div>
@@ -445,10 +453,25 @@ export default function PracticeSessionPage() {
   const isBringDown = currentKind === 'broughtDown'
 
   return (
-    <div className="flex flex-col gap-6">
-      <header>
-        <h1 className="font-display text-2xl font-extrabold text-text-space sm:text-3xl">{t('title')}</h1>
-        <p className="text-lg font-semibold text-text-space/80">{t('level', { level: levelId })}</p>
+    <div className="flex flex-col gap-4">
+      <header className="flex items-center gap-3">
+        <PlanetOrb
+          color={LEVEL_COLORS[levelId]}
+          icon={PLANET_STAGE_ICONS[LEVEL_COLORS[levelId]]}
+          className="h-12 w-12 shrink-0"
+          iconClassName="h-5 w-5"
+        />
+        <div className="min-w-0 flex-1">
+          <h1 className="font-display text-2xl font-extrabold leading-tight text-text-space">
+            {t(`level_name_${levelId}`)}
+          </h1>
+          <p className="font-display text-lg font-extrabold text-text-space/80">
+            <span>{t('level', { level: levelId })}</span>
+            <span aria-hidden="true"> · </span>
+            <span className="text-astral-sun">{`${exercise.dividend} ÷ ${exercise.divisor}`}</span>
+          </p>
+        </div>
+        <ExitSessionButton to="/practice" />
       </header>
 
       <MissionProgressBar
@@ -456,11 +479,7 @@ export default function PracticeSessionPage() {
         label={t('session_progress', { current: exerciseIndex + 1, total: totalExercises })}
       />
 
-      <div className="flex flex-col gap-5 rounded-3xl border border-white/10 bg-space-bg-soft p-5 shadow-lg shadow-black/20">
-        <p className="font-display text-2xl font-extrabold text-astral-sun">
-          {exercise.dividend} ÷ {exercise.divisor}
-        </p>
-
+      <div className="flex flex-col gap-5 rounded-3xl border border-white/10 bg-space-bg-soft p-4 shadow-lg shadow-black/20 sm:p-5">
         <OperationCard
           kind={currentKind}
           divisor={exercise.divisor}
@@ -476,6 +495,7 @@ export default function PracticeSessionPage() {
             variant="practice"
             highlightActive={highlightActive}
             highlightIndex={isBringDown ? (currentStep.nextDigitIndex ?? currentStep.digitIndex) : undefined}
+            previousSteps={steps.slice(0, stepIndex)}
             currentProduct={subStepIndex >= 2 ? currentStep.product : undefined}
             currentRemainder={subStepIndex >= 3 ? currentStep.partialRemainder : undefined}
             bringDownIndex={isBringDown ? (currentStep.nextDigitIndex ?? undefined) : undefined}
@@ -493,7 +513,15 @@ export default function PracticeSessionPage() {
           </div>
         ) : (
           <form onSubmit={handleCheck} className="flex flex-col items-center gap-3">
-            <DigitInput id={inputId} label={inputLabel} value={inputValue} onChange={handleInputChange} />
+            <DigitInput
+              id={inputId}
+              label={inputLabel}
+              value={inputValue}
+              onValueChange={handleInputChange}
+              error={inputError}
+              errorKey={errorCount}
+              maxLength={MAX_INPUT_LENGTH}
+            />
             <div className="flex flex-wrap items-center justify-center gap-3">
               <SpaceButton type="submit" variant="primary">
                 {t('check')}
@@ -510,7 +538,12 @@ export default function PracticeSessionPage() {
           </form>
         )}
 
-        <div aria-live="polite" className="min-h-[3rem]">
+        <div aria-live="polite" className="flex min-h-[3rem] flex-col gap-2">
+          {isBringDown && inputError ? (
+            <p className="rounded-2xl bg-danger/15 p-3 text-center text-base font-extrabold text-danger-soft">
+              {inputError}
+            </p>
+          ) : null}
           {hintMessage ? (
             <p className="rounded-2xl bg-astral-sun/10 p-3 text-base font-bold leading-relaxed text-astral-sun">
               {hintMessage}

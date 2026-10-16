@@ -43,3 +43,17 @@
     scroll-behavior: auto !important;
   }
 }
+/* Flecha "baja esta cifra": se desliza hacia abajo y vuelve, con frenada suave. */
+@keyframes nudge-down {
+  0%,
+  100% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+.animate-nudge-down {
+  animation: nudge-down 1.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}

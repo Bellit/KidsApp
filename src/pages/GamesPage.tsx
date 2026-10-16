@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import {
+  LevelLaunchModal,
   Mascot,
   MedalIcon,
   PlanetCard,
@@ -37,6 +38,7 @@ export default function GamesPage() {
   const achievementsUnlocked = useGameStore((s) => s.profile.achievementsUnlocked)
 
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null)
+  const [launchOpen, setLaunchOpen] = useState(false)
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({
     message: '',
     visible: false,
@@ -59,6 +61,7 @@ export default function GamesPage() {
     }
     play('click')
     setSelectedLevel(levelId)
+    setLaunchOpen(true)
   }
 
   const playTimed = () => {
@@ -164,13 +167,19 @@ export default function GamesPage() {
           })}
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-          <SpaceButton onClick={playTimed} disabled={selectedLevel === null}>
-            {t('play_timed')}
-          </SpaceButton>
-        </div>
         {selectedLevel === null ? (
-          <p className="mt-3 text-center text-sm font-bold text-text-space/60">{t('select_level_hint')}</p>
+          <p className="mt-4 text-center text-base font-bold text-text-space/70">{t('select_level_hint')}</p>
+        ) : null}
+        {selectedLevel !== null && launchOpen ? (
+          <LevelLaunchModal
+            open
+            onClose={() => setLaunchOpen(false)}
+            color={LEVEL_COLORS[selectedLevel]}
+            name={t(`level_name_${selectedLevel}`, { ns: 'practice' })}
+            description={t('timed_desc')}
+            launchLabel={t('play_timed')}
+            onLaunch={playTimed}
+          />
         ) : null}
       </section>
 

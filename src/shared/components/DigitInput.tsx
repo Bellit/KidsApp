@@ -1,45 +1,78 @@
-import type { ChangeEvent } from 'react'
+import { useEffect, useRef, type ChangeEvent } from 'react'
+import { NumberPad } from './NumberPad'
 
 interface DigitInputProps {
   id: string
   label: string
   value: string
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void
+  onValueChange: (value: string) => void
+  /** Mensaje de error fijo bajo la caja (null = sin error). */
+  error?: string | null
+  /** Cambia en cada fallo para repetir la sacudida aunque el mensaje sea igual. */
+  errorKey?: number
+  maxLength?: number
 }
 
-/** Caja numérica grande con etiqueta visible y lápiz, para que un niño vea a la primera dónde escribir. */
-export function DigitInput({ id, label, value, onChange }: DigitInputProps) {
+const SHAKE: Keyframe[] = [
+  { transform: 'translateX(0)' },
+  { transform: 'translateX(-8px)' },
+  { transform: 'translateX(8px)' },
+  { transform: 'translateX(-5px)' },
+  { transform: 'translateX(0)' },
+]
+
+/**
+ * Caja numérica grande con etiqueta visible y teclado en pantalla, para que un
+ * niño vea a la primera dónde escribir sin que el teclado del móvil tape la casita.
+ * Tras un fallo, la caja queda en rojo y la siguiente cifra sustituye a la errónea.
+ */
+export function DigitInput({ id, label, value, onValueChange, error = null, errorKey, maxLength = 3 }: DigitInputProps) {
+  const boxRef = useRef<HTMLDivElement>(null)
+  const errorId = `${id}-error`
+
+  useEffect(() => {
+    if (!error || errorKey === undefined) return
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (!reduceMotion) boxRef.current?.animate?.(SHAKE, { duration: 350, easing: 'ease-in-out' })
+  }, [error, errorKey])
+
+  const setDigits = (next: string) => onValueChange(next.replace(/[^0-9]/g, '').slice(0, maxLength))
+
+  const handleDigit = (digit: string) => setDigits(error ? digit : value + digit)
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const raw = event.target.value
+    // Con error, lo nuevo que se teclea sustituye a la respuesta equivocada.
+    setDigits(error && raw.length > value.length && raw.startsWith(value) ? raw.slice(value.length) : raw)
+  }
+
+  const boxClass = error
+    ? 'border-danger bg-danger/15 text-danger-soft shadow-[0_0_0_5px_rgba(255,120,120,0.18)]'
+    : 'border-astral-sky/60 bg-space-bg text-text-space shadow-[0_0_0_5px_rgba(168,200,240,0.14)]'
+
   return (
-    <div className="flex flex-col items-center gap-2">
-      <label htmlFor={id} className="font-display text-base font-extrabold text-astral-sky">
+    <div className="flex w-full flex-col items-center gap-3">
+      <label htmlFor={id} className="font-display text-lg font-extrabold text-astral-sky">
         {label}
       </label>
-      <div className="relative">
-        <svg
-          aria-hidden="true"
-          focusable="false"
-          viewBox="0 0 24 24"
-          className="pointer-events-none absolute left-3 top-1/2 h-6 w-6 -translate-y-1/2 text-astral-sky/70"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
-        </svg>
+      <div ref={boxRef}>
         <input
           id={id}
-          inputMode="numeric"
-          pattern="[0-9]*"
+          inputMode="none"
           autoComplete="off"
           placeholder="?"
           value={value}
-          onChange={onChange}
+          onChange={handleChange}
           aria-label={label}
-          className="min-h-16 w-32 rounded-2xl border-2 border-astral-sky/60 bg-space-bg pl-10 pr-3 text-center text-4xl font-extrabold text-text-space shadow-[0_0_0_5px_rgba(168,200,240,0.14)] transition-shadow placeholder:text-text-space/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-astral-sun"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
+          className={`min-h-16 w-32 rounded-2xl border-2 px-3 text-center text-4xl font-extrabold transition-colors placeholder:text-text-space/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-astral-sun ${boxClass}`}
         />
       </div>
+      <p id={errorId} aria-live="polite" className="min-h-6 text-center text-base font-extrabold text-danger-soft">
+        {error}
+      </p>
+      <NumberPad onDigit={handleDigit} onDelete={() => setDigits(error ? '' : value.slice(0, -1))} />
     </div>
   )
 }
