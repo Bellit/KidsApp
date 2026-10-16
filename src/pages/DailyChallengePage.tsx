@@ -280,7 +280,7 @@ export default function DailyChallengePage() {
             aria-live="polite"
             className="flex flex-col gap-1 rounded-2xl bg-success/10 px-5 py-3"
           >
-            <span className="font-display text-xl font-extrabold text-success">
+            <span className="font-display text-xl font-extrabold text-success-soft">
               {t('daily_achievement_earned')}
             </span>
             <span className="font-display text-lg font-extrabold text-success-soft">
@@ -295,11 +295,11 @@ export default function DailyChallengePage() {
         <dl className="grid w-full max-w-sm grid-cols-2 gap-3">
           <div className="rounded-2xl border border-white/10 bg-space-bg-soft p-4">
             <dt className="text-sm font-bold text-text-space/60">{t('stats_correct', { ns: 'practice' })}</dt>
-            <dd className="font-display text-2xl font-extrabold text-success">{stats?.correct ?? 0}</dd>
+            <dd className="font-display text-2xl font-extrabold text-success-soft">{stats?.correct ?? 0}</dd>
           </div>
           <div className="rounded-2xl border border-white/10 bg-space-bg-soft p-4">
             <dt className="text-sm font-bold text-text-space/60">{t('stats_errors', { ns: 'practice' })}</dt>
-            <dd className="font-display text-2xl font-extrabold text-danger">{stats?.errors ?? 0}</dd>
+            <dd className="font-display text-2xl font-extrabold text-danger-soft">{stats?.errors ?? 0}</dd>
           </div>
           <div className="rounded-2xl border border-white/10 bg-space-bg-soft p-4">
             <dt className="text-sm font-bold text-text-space/60">{t('stats_time', { ns: 'practice' })}</dt>

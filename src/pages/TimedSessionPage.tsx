@@ -299,11 +299,11 @@ export default function TimedSessionPage() {
         <dl className="grid w-full max-w-sm grid-cols-2 gap-3">
           <div className="rounded-2xl border border-white/10 bg-space-bg-soft p-4">
             <dt className="text-sm font-bold text-text-space/60">{t('correct')}</dt>
-            <dd className="font-display text-2xl font-extrabold text-success">{correctCount}</dd>
+            <dd className="font-display text-2xl font-extrabold text-success-soft">{correctCount}</dd>
           </div>
           <div className="rounded-2xl border border-white/10 bg-space-bg-soft p-4">
             <dt className="text-sm font-bold text-text-space/60">{t('errors')}</dt>
-            <dd className="font-display text-2xl font-extrabold text-danger">{errorCount}</dd>
+            <dd className="font-display text-2xl font-extrabold text-danger-soft">{errorCount}</dd>
           </div>
         </dl>
 
@@ -413,11 +413,11 @@ export default function TimedSessionPage() {
       <div className="flex items-center justify-center gap-4">
         <div className="flex items-center gap-2 rounded-2xl bg-space-bg px-4 py-2">
           <span className="text-sm font-bold text-text-space/60">{t('correct')}</span>
-          <span className="font-display text-xl font-extrabold text-success">{correctCount}</span>
+          <span className="font-display text-xl font-extrabold text-success-soft">{correctCount}</span>
         </div>
         <div className="flex items-center gap-2 rounded-2xl bg-space-bg px-4 py-2">
           <span className="text-sm font-bold text-text-space/60">{t('errors')}</span>
-          <span className="font-display text-xl font-extrabold text-danger">{errorCount}</span>
+          <span className="font-display text-xl font-extrabold text-danger-soft">{errorCount}</span>
         </div>
       </div>
 

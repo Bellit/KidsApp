@@ -47,11 +47,11 @@
     "correct": "Correct!",
     "try_again": "Almost... try again",
     "no_answer": "Enter a number to continue",
-    "hint_quotient": "Think: what number times the divisor gets close without going over?",
-    "hint_product": "Multiply the quotient digit by the divisor",
-    "hint_remainder": "Subtract the product from the partial number",
-    "hint_bring_down": "Bring down the next digit of the dividend",
-    "hint_zero_quotient": "Since the number is smaller than the divisor, write 0 and bring down another digit"
+    "hint_quotient": "Think of the {{divisor}} times table: what number times {{divisor}} gets close to {{number}} without going over?",
+    "hint_product": "Multiply {{quotientDigit}} × {{divisor}}. What do you get?",
+    "hint_remainder": "Subtract: {{number}} − {{product}}. What is left over?",
+    "hint_bring_down": "Look at the digit just to the right of the one you used, and tap it to bring it down.",
+    "hint_zero_quotient": "{{number}} is smaller than {{divisor}}: it does not fit even once. Write 0!"
   },
   "step_l1_intro": "Welcome to your first mission. Today you will learn the basic concepts of division: the dividend, the divisor, the quotient and the remainder. Get ready for liftoff.",
   "step_l1_glossary_intro": "Before we divide, meet the characters of this space adventure.",

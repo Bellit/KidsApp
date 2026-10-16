@@ -10,6 +10,7 @@ import {
   Celebration,
   DigitInput,
   ExitSessionButton,
+  HintButton,
   LongDivisionGrid,
   Mascot,
   MissionProgressBar,
@@ -42,6 +43,8 @@ interface FinalStats {
   totalExercises: number
   secondsUsed: number
   newRecord: boolean
+  /** Nivel que esta sesión acaba de desbloquear (null si ninguno). */
+  unlockedLevel: number | null
 }
 
 const MAX_HINTS_PER_INPUT = 2
@@ -106,7 +109,17 @@ function motivationKey(stars: number): string {
   return 'motivation_3'
 }
 
-export default function PracticeSessionPage() {
+/**
+ * Al pasar de un nivel a otro ("Siguiente nivel") la ruta es la misma: la `key`
+ * fuerza una sesión nueva en vez de reutilizar el estado de la anterior.
+ */
+export default function PracticeSessionRoute() {
+  const { levelId } = useParams()
+  const [searchParams] = useSearchParams()
+  return <PracticeSessionPage key={`${levelId}-${searchParams.get('count')}`} />
+}
+
+function PracticeSessionPage() {
   const { t } = useTranslation(['practice', 'lessons'])
   const { play } = useSound()
   const { levelId: levelIdParam } = useParams()
@@ -179,6 +192,8 @@ export default function PracticeSessionPage() {
     const secondsUsed = Math.max(1, Math.round((Date.now() - startTime) / 1000))
     const stars = calcStars(correct, totalExercises, errorCount, hintsUsed)
     const prevBest = useGameStore.getState().levelProgress[String(levelId)]?.bestStars ?? 0
+    const nextLevel = levelId + 1
+    const nextWasLocked = nextLevel <= LEVEL_MAX && !useGameStore.getState().isLevelUnlocked(nextLevel)
     recordSession(levelId, {
       correct,
       errors: errorCount,
@@ -195,6 +210,7 @@ export default function PracticeSessionPage() {
       totalExercises,
       secondsUsed,
       newRecord: stars > prevBest,
+      unlockedLevel: nextWasLocked && useGameStore.getState().isLevelUnlocked(nextLevel) ? nextLevel : null,
     })
     setPhase('complete')
   }
@@ -298,7 +314,14 @@ export default function PracticeSessionPage() {
         : zeroQuotient
           ? 'feedback.hint_zero_quotient'
           : genericHintKey(currentKind)
-    setHintMessage(t(hintKey))
+    setHintMessage(
+      t(hintKey, {
+        divisor: exercise?.divisor,
+        number: currentStep.currentNumber,
+        quotientDigit: currentStep.quotientDigit,
+        product: currentStep.product,
+      }),
+    )
   }
 
   const handleInputChange = (value: string) => {
@@ -355,29 +378,45 @@ export default function PracticeSessionPage() {
           {t(motivationKey(stats?.stars ?? 1))}
         </p>
         <dl className="grid w-full max-w-sm grid-cols-2 gap-3">
-          <div className="rounded-2xl bg-space-surface p-4">
-            <dt className="text-sm font-bold text-text-ink/70">{t('stats_correct')}</dt>
-            <dd className="font-display text-2xl font-extrabold text-success">{stats?.correct ?? 0}</dd>
+          <div className="rounded-2xl border border-white/10 bg-space-bg p-4">
+            <dt className="text-sm font-bold text-text-space/70">{t('stats_correct')}</dt>
+            <dd className="font-display text-2xl font-extrabold text-success-soft">{stats?.correct ?? 0}</dd>
           </div>
-          <div className="rounded-2xl bg-space-surface p-4">
-            <dt className="text-sm font-bold text-text-ink/70">{t('stats_errors')}</dt>
-            <dd className="font-display text-2xl font-extrabold text-danger">{stats?.errors ?? 0}</dd>
+          <div className="rounded-2xl border border-white/10 bg-space-bg p-4">
+            <dt className="text-sm font-bold text-text-space/70">{t('stats_errors')}</dt>
+            <dd className="font-display text-2xl font-extrabold text-danger-soft">{stats?.errors ?? 0}</dd>
           </div>
-          <div className="rounded-2xl bg-space-surface p-4">
-            <dt className="text-sm font-bold text-text-ink/70">{t('stats_time')}</dt>
-            <dd className="font-display text-2xl font-extrabold text-text-ink">
+          <div className="rounded-2xl border border-white/10 bg-space-bg p-4">
+            <dt className="text-sm font-bold text-text-space/70">{t('stats_time')}</dt>
+            <dd className="font-display text-2xl font-extrabold text-text-space">
               {stats ? formatTime(stats.secondsUsed) : ''}
             </dd>
           </div>
-          <div className="rounded-2xl bg-space-surface p-4">
-            <dt className="text-sm font-bold text-text-ink/70">{t('stats_exercises')}</dt>
-            <dd className="font-display text-2xl font-extrabold text-text-ink">
+          <div className="rounded-2xl border border-white/10 bg-space-bg p-4">
+            <dt className="text-sm font-bold text-text-space/70">{t('stats_exercises')}</dt>
+            <dd className="font-display text-2xl font-extrabold text-text-space">
               {stats?.totalExercises ?? 0}
             </dd>
           </div>
         </dl>
+        {stats?.unlockedLevel ? (
+          <Link
+            to={`/practice/${stats.unlockedLevel}?count=${count}`}
+            className="flex w-full max-w-sm items-center justify-center gap-3 rounded-3xl bg-astral-sun px-6 py-4 font-display text-xl font-extrabold text-text-ink shadow-lg shadow-black/30 transition-transform hover:scale-[1.02] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-astral-sun active:scale-[0.98]"
+          >
+            <PlanetOrb
+              color={LEVEL_COLORS[stats.unlockedLevel]}
+              icon={PLANET_STAGE_ICONS[LEVEL_COLORS[stats.unlockedLevel]]}
+              className="h-10 w-10 shrink-0"
+              iconClassName="h-4 w-4"
+            />
+            {t('next_level', { planet: t(`level_name_${stats.unlockedLevel}`) })}
+          </Link>
+        ) : null}
         <div className="flex flex-wrap justify-center gap-3">
-          <SpaceButton onClick={handleRepeat}>{t('repeat')}</SpaceButton>
+          <SpaceButton variant={stats?.unlockedLevel ? 'ghost' : 'primary'} onClick={handleRepeat}>
+            {t('repeat')}
+          </SpaceButton>
           <Link
             to="/practice"
             className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-2xl bg-planet-venus px-6 py-3 font-display text-lg font-extrabold text-text-ink shadow-lg shadow-black/20 transition-transform hover:scale-105 hover:bg-astral-rose focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-astral-sun active:scale-95"
@@ -507,9 +546,7 @@ export default function PracticeSessionPage() {
 
         {isBringDown ? (
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <SpaceButton type="button" variant="ghost" onClick={handleHint} disabled={hintCount >= MAX_HINTS_PER_INPUT}>
-              {t('hint')}
-            </SpaceButton>
+            <HintButton label={t('hint')} used={hintCount} max={MAX_HINTS_PER_INPUT} onClick={handleHint} />
           </div>
         ) : (
           <form onSubmit={handleCheck} className="flex flex-col items-center gap-3">
@@ -526,14 +563,7 @@ export default function PracticeSessionPage() {
               <SpaceButton type="submit" variant="primary">
                 {t('check')}
               </SpaceButton>
-              <SpaceButton
-                type="button"
-                variant="ghost"
-                onClick={handleHint}
-                disabled={hintCount >= MAX_HINTS_PER_INPUT}
-              >
-                {t('hint')}
-              </SpaceButton>
+              <HintButton label={t('hint')} used={hintCount} max={MAX_HINTS_PER_INPUT} onClick={handleHint} />
             </div>
           </form>
         )}

@@ -7,6 +7,7 @@ import {
   Celebration,
   DigitInput,
   ExitSessionButton,
+  HintButton,
   LongDivisionGrid,
   Mascot,
   OperationCard,
@@ -263,7 +264,14 @@ export function LessonEngine({ lesson, onComplete }: LessonEngineProps) {
         : zeroQuotient
           ? 'feedback.hint_zero_quotient'
           : genericHintKey(currentKind)
-    setHintMessage(t(hintKey))
+    setHintMessage(
+      t(hintKey, {
+        divisor: exercise?.divisor,
+        number: currentStep.currentNumber,
+        quotientDigit: currentStep.quotientDigit,
+        product: currentStep.product,
+      }),
+    )
   }
 
   const handleShowMe = () => {
@@ -480,9 +488,7 @@ export function LessonEngine({ lesson, onComplete }: LessonEngineProps) {
           </div>
           {isBringDown ? (
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <SpaceButton type="button" variant="ghost" onClick={handleHint} disabled={hintCount >= MAX_HINTS_PER_STEP}>
-                {t('common.hint')}
-              </SpaceButton>
+              <HintButton label={t('common.hint')} used={hintCount} max={MAX_HINTS_PER_STEP} onClick={handleHint} />
               {isGuided ? (
                 <SpaceButton variant="secondary" onClick={handleShowMe}>
                   {t('common.show_me')}
@@ -503,9 +509,7 @@ export function LessonEngine({ lesson, onComplete }: LessonEngineProps) {
                 <SpaceButton type="submit" variant="primary">
                   {t('common.check')}
                 </SpaceButton>
-                <SpaceButton type="button" variant="ghost" onClick={handleHint} disabled={hintCount >= MAX_HINTS_PER_STEP}>
-                  {t('common.hint')}
-                </SpaceButton>
+                <HintButton label={t('common.hint')} used={hintCount} max={MAX_HINTS_PER_STEP} onClick={handleHint} />
                 {isGuided ? (
                   <SpaceButton variant="secondary" onClick={handleShowMe}>
                     {t('common.show_me')}

@@ -47,11 +47,11 @@
     "correct": "¡Correcto!",
     "try_again": "Casi... inténtalo otra vez",
     "no_answer": "Escribe un número para continuar",
-    "hint_quotient": "Piensa: ¿qué número multiplicado por el divisor se acerca sin pasarse?",
-    "hint_product": "Multiplica la cifra del cociente por el divisor",
-    "hint_remainder": "Resta el producto del número parcial",
-    "hint_bring_down": "Baja la siguiente cifra del dividendo",
-    "hint_zero_quotient": "Como el número es menor que el divisor, escribe 0 y baja otra cifra"
+    "hint_quotient": "Piensa en la tabla del {{divisor}}: ¿qué número por {{divisor}} se acerca a {{number}} sin pasarse?",
+    "hint_product": "Multiplica {{quotientDigit}} × {{divisor}}. ¿Cuánto da?",
+    "hint_remainder": "Resta: {{number}} − {{product}}. ¿Cuánto sobra?",
+    "hint_bring_down": "Mira la cifra que está justo a la derecha de la que acabas de usar y tócala para bajarla.",
+    "hint_zero_quotient": "El {{number}} es más pequeño que el {{divisor}}: no cabe ninguna vez. ¡Escribe 0!"
   },
   "step_l1_intro": "Bienvenido a tu primera misión. Hoy conocerás los conceptos básicos de la división: el dividendo, el divisor, el cociente y el resto. Prepárate para despegar.",
   "step_l1_glossary_intro": "Antes de dividir, conoce a los personajes de esta aventura espacial.",

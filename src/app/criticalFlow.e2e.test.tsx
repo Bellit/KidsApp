@@ -183,6 +183,8 @@ describe('F7.2 — e2e del flujo crítico', () => {
     expect(screen.getByRole('heading', { name: '¡Sesión completada!' })).toBeInTheDocument()
     expect(screen.getAllByRole('img', { name: '3 de 3 estrellas' }).length).toBeGreaterThan(0)
     expect(screen.getByText('¡Nuevo récord!')).toBeInTheDocument()
+    // B5: con Venus recién desbloqueado, el botón principal lleva al siguiente nivel.
+    expect(screen.getByRole('link', { name: 'Siguiente nivel: Venus' })).toHaveAttribute('href', '/practice/2?count=5')
 
     const state = useGameStore.getState()
     expect(state.profile.totalStars).toBe(3)
