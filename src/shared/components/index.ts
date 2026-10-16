@@ -1,6 +1,13 @@
 export { SpaceButton, type SpaceButtonVariant } from './SpaceButton'
-export { PlanetCard, PLANET_STAGE_ICONS, type PlanetColor, type PlanetCardState, type PlanetIconName } from './PlanetCard'
-export { PlanetOrb, PLANET_ICON_PATHS } from './PlanetOrb'
+export { PlanetCard } from './PlanetCard'
+export { PlanetOrb } from './PlanetOrb'
+export {
+  PLANET_ICON_PATHS,
+  PLANET_STAGE_ICONS,
+  type PlanetCardState,
+  type PlanetColor,
+  type PlanetIconName,
+} from './planetTokens'
 export { StarBadge } from './StarBadge'
 export { MedalIcon } from './MedalIcon'
 export { Modal } from './Modal'

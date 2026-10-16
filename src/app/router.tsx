@@ -24,7 +24,7 @@ function withSuspense(Component: ComponentType) {
   )
 }
 
-export const router = createBrowserRouter(
+const router = createBrowserRouter(
   [
     {
       path: '/',
