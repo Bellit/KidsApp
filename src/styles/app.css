@@ -34,6 +34,11 @@
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
+    /* Reserva siempre el hueco de la barra de scroll: sin esto, al pasar de una
+       página corta (Inicio) a una larga (Retos) aparece la barra, el ancho útil
+       se estrecha y todo el contenido centrado salta unos píxeles. */
+    scrollbar-gutter: stable;
+    scrollbar-color: rgba(168, 200, 240, 0.35) transparent;
   }
   body {
     margin: 0;
