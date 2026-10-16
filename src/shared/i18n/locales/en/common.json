@@ -18,7 +18,11 @@
     "loading": "Loading...",
     "not_found": "You got lost in space!",
     "not_found_hint": "This area is not on the star map yet.",
-    "back_home": "Back to home"
+    "back_home": "Back to home",
+    "error_title": "Oops! Something drifted off into space",
+    "error_hint": "Something unexpected happened. Reload to continue your mission.",
+    "error_outdated": "There is a new version of the app. Reload to continue your mission.",
+    "reload": "Reload"
   },
   "ui": {
     "button_label": "Press here",

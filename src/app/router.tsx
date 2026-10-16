@@ -2,6 +2,7 @@ import { Suspense, lazy, type ComponentType } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import { AppShell } from './shell/AppShell'
 import { PageLoading } from '../shared/components/PageLoading'
+import { RouteError } from './RouteError'
 
 const HomePage = lazy(() => import('../pages/HomePage'))
 const LessonIndexPage = lazy(() => import('../pages/LessonIndexPage'))
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
     {
       path: '/',
       element: <AppShell />,
+    errorElement: <RouteError />,
       children: [
         { index: true, element: withSuspense(HomePage) },
         { path: 'lessons', element: withSuspense(LessonIndexPage) },

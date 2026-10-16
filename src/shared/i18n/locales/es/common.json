@@ -18,7 +18,11 @@
     "loading": "Cargando...",
     "not_found": "¡Te perdiste en el espacio!",
     "not_found_hint": "Esta zona todavía no está en el mapa estelar.",
-    "back_home": "Volver al inicio"
+    "back_home": "Volver al inicio",
+    "error_title": "¡Uy! Algo se ha despistado en el espacio",
+    "error_hint": "Ha pasado algo inesperado. Vuelve a cargar para seguir con tu misión.",
+    "error_outdated": "Hay una versión nueva de la app. Vuelve a cargar para seguir con tu misión.",
+    "reload": "Volver a cargar"
   },
   "ui": {
     "button_label": "Pulsa aquí",
