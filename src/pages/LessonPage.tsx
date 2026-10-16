@@ -1,15 +1,19 @@
+import { useCallback } from 'react'
 import { Link } from 'react-router'
 import { useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { LESSONS } from '../features/lessons/content'
 import { LessonEngine } from '../features/lessons/LessonEngine'
 import type { LessonId } from '../features/lessons/types'
+import { useGameStore } from '../shared/store/gameStore'
 
 export default function LessonPage() {
   const { t } = useTranslation('lessons')
   const { lessonId } = useParams()
   const parsed = Number(lessonId)
   const lesson = LESSONS[parsed as LessonId]
+  const completeLesson = useGameStore((s) => s.completeLesson)
+  const handleComplete = useCallback(() => completeLesson(parsed), [completeLesson, parsed])
 
   if (!lesson) {
     return (
@@ -25,5 +29,5 @@ export default function LessonPage() {
     )
   }
 
-  return <LessonEngine lesson={lesson} />
+  return <LessonEngine lesson={lesson} onComplete={handleComplete} />
 }

@@ -203,7 +203,7 @@ describe('F7.2 — e2e del flujo crítico', () => {
     act(() => {
       capturedNavigate?.('/profile')
     })
-    expect(screen.getByRole('heading', { name: 'Mi perfil' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Mi progreso' })).toBeInTheDocument()
     expect(screen.getByText('Estrellas totales')).toBeInTheDocument()
     expect(screen.getByText('3')).toBeInTheDocument()
     expect(screen.getByText('2/5')).toBeInTheDocument()

@@ -62,7 +62,10 @@
     "practice_desc": "Train and earn stars",
     "games_desc": "Race against the clock!",
     "profile_desc": "See your medals and records",
-    "settings_desc": "Sound and language for your mission"
+    "settings_desc": "Sound and language for your mission",
+    "continue": "Continue mission",
+    "next_lesson": "Lesson {{number}}: {{name}}",
+    "next_level": "Practice on {{planet}}"
   },
   "install": {
     "title": "Install the app!",

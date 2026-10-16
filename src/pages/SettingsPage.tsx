@@ -1,9 +1,16 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Mascot, SpaceButton, Toast } from '../shared/components'
+import { Mascot, Toast } from '../shared/components'
 import { useSound } from '../shared/hooks/useSound'
 
 type LanguageCode = 'es' | 'en'
+
+const LANGUAGES: { code: LanguageCode; labelKey: string }[] = [
+  { code: 'es', labelKey: 'spanish' },
+  { code: 'en', labelKey: 'english' },
+]
+
+const CHECK_PATH = 'M5 12l5 5L20 7'
 
 const SETTING_ICON_PATHS: Record<'globe' | 'speaker', ReactNode> = {
   globe: (
@@ -73,21 +80,31 @@ export default function SettingsPage() {
           <h2 className="font-display text-xl font-extrabold text-text-space">{t('language')}</h2>
         </div>
         <p className="mt-2 text-base font-semibold text-text-space/70">{t('language_hint')}</p>
-        <div role="group" aria-label={t('language')} className="mt-4 flex flex-wrap gap-3">
-          <SpaceButton
-            variant={i18n.language === 'es' ? 'primary' : 'secondary'}
-            aria-pressed={i18n.language === 'es'}
-            onClick={() => handleLanguageChange('es')}
-          >
-            {t('spanish')}
-          </SpaceButton>
-          <SpaceButton
-            variant={i18n.language === 'en' ? 'primary' : 'secondary'}
-            aria-pressed={i18n.language === 'en'}
-            onClick={() => handleLanguageChange('en')}
-          >
-            {t('english')}
-          </SpaceButton>
+        <div role="group" aria-label={t('language')} className="mt-4 grid grid-cols-2 gap-3">
+          {LANGUAGES.map(({ code, labelKey }) => {
+            // resolvedLanguage: el detector puede dar "es-ES", que no es igual a "es".
+            const selected = (i18n.resolvedLanguage ?? i18n.language).startsWith(code)
+            return (
+              <button
+                key={code}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => handleLanguageChange(code)}
+                className={`flex min-h-14 items-center justify-center gap-2 rounded-2xl border-2 px-4 font-display text-lg font-extrabold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-astral-sun ${
+                  selected
+                    ? 'border-astral-sun bg-astral-sun text-text-ink shadow-lg shadow-black/20'
+                    : 'border-white/20 bg-transparent text-text-space/80 hover:bg-white/10'
+                }`}
+              >
+                {selected ? (
+                  <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d={CHECK_PATH} />
+                  </svg>
+                ) : null}
+                {t(labelKey)}
+              </button>
+            )
+          })}
         </div>
       </section>
 
@@ -97,19 +114,30 @@ export default function SettingsPage() {
           <h2 className="font-display text-xl font-extrabold text-text-space">{t('sound')}</h2>
         </div>
         <p className="mt-2 text-base font-semibold text-text-space/70">{t('sound_hint')}</p>
-        <div className="mt-4">
-          <SpaceButton
-            variant={muted ? 'secondary' : 'primary'}
-            aria-pressed={!muted}
-            onClick={() => {
-              play('click')
-              toggleMuted()
-              showSavedToast()
-            }}
-          >
+        <button
+          type="button"
+          role="switch"
+          aria-label={t('sound')}
+          aria-checked={!muted}
+          onClick={() => {
+            play('click')
+            toggleMuted()
+            showSavedToast()
+          }}
+          className="mt-4 flex min-h-14 w-full items-center justify-between gap-4 rounded-2xl border-2 border-white/15 px-4 text-left transition-colors hover:bg-white/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-astral-sun"
+        >
+          <span className={`font-display text-lg font-extrabold ${muted ? 'text-text-space/70' : 'text-success-soft'}`}>
             {muted ? t('sound_off') : t('sound_on')}
-          </SpaceButton>
-        </div>
+          </span>
+          <span
+            aria-hidden="true"
+            className={`relative h-9 w-16 shrink-0 rounded-full transition-colors ${muted ? 'bg-white/20' : 'bg-success'}`}
+          >
+            <span
+              className={`absolute top-1 h-7 w-7 rounded-full bg-white shadow-md transition-transform ${muted ? 'left-1' : 'left-1 translate-x-7'}`}
+            />
+          </span>
+        </button>
       </section>
 
       <Toast message={t('saved')} variant="success" visible={toastVisible} />

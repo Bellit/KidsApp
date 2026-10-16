@@ -232,3 +232,19 @@ describe('reto diario — premio y bloqueo por día', () => {
     expect(useGameStore.getState().profile.achievementsUnlocked).not.toContain('early_bird')
   })
 })
+describe('completeLesson', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    useGameStore.getState().resetProgress()
+  })
+
+  it('guarda cada lección terminada una sola vez y se borra al reiniciar', () => {
+    useGameStore.getState().completeLesson(1)
+    useGameStore.getState().completeLesson(2)
+    useGameStore.getState().completeLesson(1)
+    expect(useGameStore.getState().lessonsCompleted).toEqual([1, 2])
+
+    useGameStore.getState().resetProgress()
+    expect(useGameStore.getState().lessonsCompleted).toEqual([])
+  })
+})

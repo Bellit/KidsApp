@@ -1,7 +1,9 @@
 {
   "lesson": "Lesson {{lesson}}",
   "index": {
-    "subtitle": "Pick a planet to start your adventure"
+    "subtitle": "Pick a planet to start your adventure",
+    "start_here": "Start here!",
+    "completed": "Completed"
   },
   "title_1": "Concepts",
   "title_2": "The first division",

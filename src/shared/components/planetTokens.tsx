@@ -2,14 +2,18 @@ import type { ReactNode } from 'react'
 
 export type PlanetColor = 'mercury' | 'venus' | 'earth' | 'mars' | 'asteroid'
 export type PlanetCardState = 'locked' | 'active' | 'completed'
-export type PlanetIconName = 'star' | 'book' | 'pencil' | 'rocket' | 'medal' | 'gear'
+export type PlanetIconName = 'star' | 'moon' | 'globe' | 'flame' | 'book' | 'pencil' | 'rocket' | 'medal' | 'gear'
 
-/** Icono de etapa por planeta (progresión de dificultad) para tarjetas de nivel. */
+/**
+ * Icono de etapa por planeta (progresión de dificultad) para tarjetas de nivel.
+ * Son iconos de cielo, distintos de los de las secciones (libro = Lecciones,
+ * lápiz = Práctica, cohete = Retos...), para que un icono signifique una sola cosa.
+ */
 export const PLANET_STAGE_ICONS: Record<PlanetColor, PlanetIconName> = {
   mercury: 'star',
-  venus: 'pencil',
-  earth: 'book',
-  mars: 'rocket',
+  venus: 'moon',
+  earth: 'globe',
+  mars: 'flame',
   asteroid: 'medal',
 }
 
@@ -54,6 +58,17 @@ export const PLANET_ICON_PATHS: Record<PlanetIconName, ReactNode> = {
       <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
       <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
     </>
+  ),
+  moon: <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z" />,
+  globe: (
+    <>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+      <path d="M2 12h20" />
+    </>
+  ),
+  flame: (
+    <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
   ),
   medal: (
     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />

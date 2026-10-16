@@ -391,7 +391,11 @@ export default function TimedSessionPage() {
           <h1 className="font-display text-2xl font-extrabold text-text-space sm:text-3xl">
             {t('timed_title')}
           </h1>
-          <p className="text-lg font-semibold text-text-space/80">{t('level', { level: levelId, ns: 'practice' })}</p>
+          <p className="font-display text-lg font-extrabold text-text-space/80">
+            <span>{t('level', { level: levelId, ns: 'practice' })}</span>
+            <span aria-hidden="true"> · </span>
+            <span className="text-astral-sun">{`${exercise.dividend} ÷ ${exercise.divisor}`}</span>
+          </p>
         </div>
         <ExitSessionButton to="/games" />
         <div className="flex flex-col items-end gap-1">
@@ -418,10 +422,6 @@ export default function TimedSessionPage() {
       </div>
 
       <div className="flex flex-col gap-5 rounded-3xl border border-white/10 bg-space-bg-soft p-5 shadow-lg shadow-black/20">
-        <p className="font-display text-2xl font-extrabold text-astral-sun">
-          {exercise.dividend} ÷ {exercise.divisor}
-        </p>
-
         <OperationCard
           kind={currentKind}
           divisor={exercise.divisor}

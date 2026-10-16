@@ -1,7 +1,9 @@
 {
   "lesson": "Lección {{lesson}}",
   "index": {
-    "subtitle": "Elige un planeta para comenzar tu aventura"
+    "subtitle": "Elige un planeta para comenzar tu aventura",
+    "start_here": "¡Empieza aquí!",
+    "completed": "Completada"
   },
   "title_1": "Conceptos",
   "title_2": "La primera división",

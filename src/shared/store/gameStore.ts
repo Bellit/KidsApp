@@ -38,6 +38,9 @@ interface GameState {
   lastDailyRewardDate: string | null
   /** F4.3: récords del modo contrarreloj por nivel (top 5, ordenados desc). */
   timedScores: Record<string, number[]>
+  /** Lecciones terminadas (ids), para marcarlas en el índice y sugerir la siguiente. */
+  lessonsCompleted: number[]
+  completeLesson: (lessonId: number) => void
   recordSession: (levelId: number, stats: SessionStats, options?: { isDailyChallenge?: boolean }) => void
   resetProgress: () => void
   unlockLevel: (levelId: number) => void
@@ -64,6 +67,7 @@ const initialProgress = {
   levelProgress: {} as Record<string, LevelProgress>,
   lastDailyRewardDate: null as string | null,
   timedScores: {} as Record<string, number[]>,
+  lessonsCompleted: [] as number[],
 }
 
 export const useGameStore = create<GameState>()(
@@ -132,6 +136,14 @@ export const useGameStore = create<GameState>()(
                 : nextProfile,
           }
         })
+      },
+
+      completeLesson: (lessonId) => {
+        set((state) =>
+          state.lessonsCompleted.includes(lessonId)
+            ? state
+            : { lessonsCompleted: [...state.lessonsCompleted, lessonId] },
+        )
       },
 
       resetProgress: () => {
@@ -221,6 +233,8 @@ export const useGameStore = create<GameState>()(
     }),
     {
       name: 'kidsapp:progress',
+      // `lessonsCompleted` se añadió después: el progreso guardado sin ese campo
+      // toma el valor inicial ([]) al fusionarse, así que tampoco hace falta migrar.
       // F4.1: la forma de los datos persistidos no cambia (solo el comportamiento
       // del getter isLevelUnlocked), así que no se necesita migración ni bump de
       // versión. Se mantiene la versión 1 para preservar el progreso existente.

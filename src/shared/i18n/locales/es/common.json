@@ -62,7 +62,10 @@
     "practice_desc": "Entrena y consigue estrellas",
     "games_desc": "¡Ponte a prueba contra el reloj!",
     "profile_desc": "Mira tus medallas y récords",
-    "settings_desc": "Sonido e idioma de tu misión"
+    "settings_desc": "Sonido e idioma de tu misión",
+    "continue": "Continuar misión",
+    "next_lesson": "Lección {{number}}: {{name}}",
+    "next_level": "Practicar en {{planet}}"
   },
   "install": {
     "title": "¡Instala la app!",

@@ -1,7 +1,12 @@
-import { useMemo, type ReactNode } from 'react'
+import { useMemo } from 'react'
 import { NavLink } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { Mascot } from '../shared/components'
+import { SectionIcon } from '../shared/components/SectionIcon'
+import type { SectionId } from '../shared/components/sectionIcons'
+import { LESSONS, LESSON_IDS } from '../features/lessons/content'
+import { LEVELS } from '../core/progression/levels'
+import { useGameStore } from '../shared/store/gameStore'
 import { mulberry32 } from '../shared/utils/random'
 import '../styles/stars.css'
 
@@ -30,9 +35,10 @@ type NodeColor = 'mercury' | 'venus' | 'earth' | 'mars' | 'asteroid'
 
 interface MissionNode {
   to: string
+  section: SectionId
   color: NodeColor
   nameKey: string
-  /** Posición y tamaño en % dentro del mapa (base de diseño 390×540). */
+  /** Posición y tamaño en % dentro del mapa (base de diseño 390×420). */
   left: number
   top: number
   width: number
@@ -55,54 +61,54 @@ const NODE_GLOW: Record<NodeColor, string> = {
   asteroid: '0 10px 22px rgba(0,0,0,.35), 0 0 22px rgba(155,123,240,.4)',
 }
 
-const NODE_ICON: Record<NodeColor, ReactNode> = {
-  mercury: (
-    <>
-      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-    </>
-  ),
-  venus: (
-    <>
-      <path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15" />
-      <path d="M11 12 5.12 2.2" />
-      <path d="m13 12 5.88-9.8" />
-      <path d="M8 7h8" />
-      <circle cx="12" cy="17" r="5" />
-    </>
-  ),
-  earth: <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />,
-  mars: (
-    <>
-      <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
-      <path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
-      <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
-      <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
-    </>
-  ),
-  asteroid: (
-    <>
-      <circle cx="12" cy="12" r="3" />
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-    </>
-  ),
-}
-
-/** Posiciones del mapa de misión, diseñadas sobre un lienzo base de 390×540. */
+/**
+ * Posiciones del mapa de misión, diseñadas sobre un lienzo base de 390×420.
+ * Ajustes no está en el mapa: ya tiene su engranaje fijo en la cabecera.
+ */
 const NODES: MissionNode[] = [
-  { to: '/lessons', color: 'mercury', nameKey: 'nav.lessons', left: 12.3, top: 0, width: 21.5, height: 15.6 },
-  { to: '/practice', color: 'earth', nameKey: 'nav.practice', left: 59.0, top: 19.3, width: 21.5, height: 15.6 },
-  { to: '/games', color: 'mars', nameKey: 'nav.games', left: 12.3, top: 42.6, width: 21.5, height: 15.6 },
-  { to: '/profile', color: 'venus', nameKey: 'nav.profile', left: 59.0, top: 48.9, width: 21.5, height: 15.6 },
-  { to: '/settings', color: 'asteroid', nameKey: 'nav.settings', left: 38.0, top: 73.7, width: 16.9, height: 12.2 },
+  { to: '/lessons', section: 'lessons', color: 'mercury', nameKey: 'nav.lessons', left: 12.3, top: 0, width: 21.5, height: 20 },
+  { to: '/practice', section: 'practice', color: 'earth', nameKey: 'nav.practice', left: 59.0, top: 24.8, width: 21.5, height: 20 },
+  { to: '/games', section: 'games', color: 'mars', nameKey: 'nav.games', left: 12.3, top: 54.8, width: 21.5, height: 20 },
+  { to: '/profile', section: 'profile', color: 'venus', nameKey: 'nav.profile', left: 59.0, top: 62.9, width: 21.5, height: 20 },
 ]
 
-const TRAIL_PATH =
-  'M90,42 C 210,78 255,108 272,146 C 235,192 105,218 90,272 C 74,318 255,288 272,306 C 232,350 195,392 181,431'
+const TRAIL_PATH = 'M90,42 C 210,78 255,108 272,146 C 235,192 105,218 90,272 C 74,318 255,288 272,306'
+
+const ARROW_PATH = 'M5 12h14M13 6l6 6-6 6'
+
+/** Siguiente paso recomendado: la primera lección sin terminar o, si ya están todas, el nivel más alto abierto. */
+function useNextMission() {
+  const { t } = useTranslation(['common', 'lessons', 'practice'])
+  const lessonsCompleted = useGameStore((s) => s.lessonsCompleted)
+  const isLevelUnlocked = useGameStore((s) => s.isLevelUnlocked)
+  // Suscripción explícita: el nivel abierto cambia cuando cambia el progreso.
+  useGameStore((s) => s.levelProgress)
+
+  const nextLessonIndex = LESSON_IDS.findIndex((id) => !lessonsCompleted.includes(id))
+  if (nextLessonIndex >= 0) {
+    const id = LESSON_IDS[nextLessonIndex]
+    return {
+      to: `/lessons/${id}`,
+      label: t('home.next_lesson', { number: nextLessonIndex + 1, name: t(LESSONS[id].titleKey, { ns: 'lessons' }) }),
+    }
+  }
+  const level = [...LEVELS].reverse().find((candidate) => isLevelUnlocked(candidate.id)) ?? LEVELS[0]
+  return {
+    to: `/practice/${level.id}?count=5`,
+    label: t('home.next_level', { planet: t(level.i18nKey, { ns: 'practice' }) }),
+  }
+}
 
 export default function HomePage() {
   const { t } = useTranslation()
   const stars = useMemo(buildStars, [])
+  const next = useNextMission()
+  const lessonsDone = useGameStore((s) => s.lessonsCompleted.length)
+  const totalStars = useGameStore((s) => s.profile.totalStars)
+  const badges: Partial<Record<SectionId, string>> = {
+    lessons: `${lessonsDone}/${LESSON_IDS.length}`,
+    practice: `★ ${totalStars}`,
+  }
 
   return (
     <section className="relative rounded-3xl">
@@ -140,9 +146,24 @@ export default function HomePage() {
           </div>
         </header>
 
-        <div className="relative mx-auto w-full max-w-[420px]" style={{ aspectRatio: '390 / 540' }}>
+        <NavLink
+          to={next.to}
+          className="group flex items-center gap-3 rounded-3xl bg-astral-sun px-5 py-4 text-text-ink shadow-lg shadow-black/30 transition-transform hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-astral-sun"
+        >
+          <span className="min-w-0 flex-1">
+            <span className="block font-display text-2xl font-extrabold leading-tight">{t('home.continue')}</span>
+            <span className="block truncate text-base font-bold text-text-ink/75">{next.label}</span>
+          </span>
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-text-ink text-astral-sun transition-transform group-hover:translate-x-1">
+            <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+              <path d={ARROW_PATH} />
+            </svg>
+          </span>
+        </NavLink>
+
+        <div className="relative mx-auto w-full max-w-[420px]" style={{ aspectRatio: '390 / 420' }}>
           <svg
-            viewBox="0 0 390 540"
+            viewBox="0 0 390 420"
             preserveAspectRatio="none"
             className="pointer-events-none absolute inset-0 h-full w-full"
             aria-hidden="true"
@@ -194,20 +215,13 @@ export default function HomePage() {
                   style={{ boxShadow: 'inset 0 -10px 16px rgba(27,42,74,.35)' }}
                 />
                 <span className="absolute inset-0 flex items-center justify-center p-[22%] text-text-ink">
-                  <svg
-                    viewBox="0 0 24 24"
-                    className="h-full w-full"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                    focusable="false"
-                  >
-                    {NODE_ICON[node.color]}
-                  </svg>
+                  <SectionIcon id={node.section} className="h-full w-full" />
                 </span>
+                {badges[node.section] ? (
+                  <span className="absolute -right-3 -top-1 rounded-full bg-text-ink px-2 py-0.5 font-display text-sm font-extrabold text-astral-sun shadow-md shadow-black/30">
+                    {badges[node.section]}
+                  </span>
+                ) : null}
               </span>
               <span className="font-display text-sm font-extrabold text-text-space sm:text-base">{t(node.nameKey)}</span>
             </NavLink>

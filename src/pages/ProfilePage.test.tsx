@@ -26,7 +26,7 @@ describe('ProfilePage', () => {
 
   it('muestra la cabecera y las tarjetas de resumen', () => {
     render(<ProfilePage />)
-    expect(screen.getByRole('heading', { name: 'Mi perfil' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Mi progreso' })).toBeInTheDocument()
     expect(screen.getByText('Tu viaje por el espacio')).toBeInTheDocument()
     expect(screen.getByText('1/5')).toBeInTheDocument()
     expect(screen.getByText('0/12')).toBeInTheDocument()
