@@ -13,6 +13,11 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      // El registro lo hace src/main.tsx con virtual:pwa-register, que recarga la
+      // página cuando toma el control una versión nueva. El script automático solo
+      // registraba: la pestaña abierta seguía con el código viejo y pedía archivos
+      // que la versión nueva ya había borrado ("Failed to fetch dynamically imported module").
+      injectRegister: false,
       includeAssets: [
         'favicon.svg',
         'icons/pwa-192x192.png',
