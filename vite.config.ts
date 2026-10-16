@@ -4,7 +4,10 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
+const base = '/KidsApp/'
+
 export default defineConfig({
+  base,
   plugins: [
     react(),
     tailwindcss(),
@@ -27,12 +30,17 @@ export default defineConfig({
         display: 'standalone',
         display_override: ['standalone', 'browser'],
         orientation: 'portrait',
-        start_url: '/',
-        scope: '/',
+        start_url: base,
+        scope: base,
         icons: [
           { src: 'icons/pwa-192x192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icons/pwa-512x512.png', sizes: '512x512', type: 'image/png' },
-          { src: 'icons/maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          {
+            src: 'icons/maskable-icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
         ],
       },
       workbox: {
@@ -61,7 +69,7 @@ export default defineConfig({
         // Fallback para rutas SPA (/practice/3, etc.) al recargar offline:
         // sirve index.html. No hace falta denylist porque la app es 100% SPA
         // y no existen URLs que deban responder con sus propios assets.
-        navigateFallback: '/index.html',
+        navigateFallback: `${base}index.html`,
       },
     }),
   ],

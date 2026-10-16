@@ -24,26 +24,29 @@ function withSuspense(Component: ComponentType) {
   )
 }
 
-export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <AppShell />,
-    children: [
-      { index: true, element: withSuspense(HomePage) },
-      { path: 'lessons', element: withSuspense(LessonIndexPage) },
-      { path: 'lessons/:lessonId', element: withSuspense(LessonPage) },
-      { path: 'practice', element: withSuspense(PracticeIndexPage) },
-      { path: 'practice/:levelId', element: withSuspense(PracticeSessionPage) },
-      { path: 'games', element: withSuspense(GamesPage) },
-      { path: 'games/timed', element: withSuspense(TimedSessionPage) },
-      { path: 'games/daily', element: withSuspense(DailyChallengePage) },
-      { path: 'profile', element: withSuspense(ProfilePage) },
-      { path: 'settings', element: withSuspense(SettingsPage) },
-      { path: 'design', element: withSuspense(DesignSystemPage) },
-      { path: '*', element: withSuspense(NotFoundPage) },
-    ],
-  },
-])
+export const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <AppShell />,
+      children: [
+        { index: true, element: withSuspense(HomePage) },
+        { path: 'lessons', element: withSuspense(LessonIndexPage) },
+        { path: 'lessons/:lessonId', element: withSuspense(LessonPage) },
+        { path: 'practice', element: withSuspense(PracticeIndexPage) },
+        { path: 'practice/:levelId', element: withSuspense(PracticeSessionPage) },
+        { path: 'games', element: withSuspense(GamesPage) },
+        { path: 'games/timed', element: withSuspense(TimedSessionPage) },
+        { path: 'games/daily', element: withSuspense(DailyChallengePage) },
+        { path: 'profile', element: withSuspense(ProfilePage) },
+        { path: 'settings', element: withSuspense(SettingsPage) },
+        { path: 'design', element: withSuspense(DesignSystemPage) },
+        { path: '*', element: withSuspense(NotFoundPage) },
+      ],
+    },
+  ],
+  { basename: import.meta.env.BASE_URL },
+)
 
 export function AppRouter() {
   return <RouterProvider router={router} />

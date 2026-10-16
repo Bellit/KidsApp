@@ -17,3 +17,5 @@ Vite 6 · React 19 · TypeScript · Tailwind CSS v4 (@tailwindcss/vite) · React
 
 ## Roadmap
 La app ya es instalable como **PWA** en Chrome/Edge y Android vía A2HS. Publicar en Google Play / App Store es **futuro** — ver [docs/play-store.md](docs/play-store.md) (F5.4): opción A (TWA/Bubblewrap) para Play Store, opción B (Capacitor) para Play Store + App Store.
+## Despliegue
+Publicada en **https://bellit.github.io/KidsApp/** mediante GitHub Pages. Cada push a `main` ejecuta `.github/workflows/deploy.yml` (tests + build + deploy). La app se sirve bajo `/KidsApp/` (`base` en `vite.config.ts`); `404.html` es una copia de `index.html` para que las rutas profundas funcionen al recargar.
